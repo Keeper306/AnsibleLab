@@ -1,0 +1,22 @@
+---
+- name: Uninstall httpd, close port 443 and 80, and remove start page
+  hosts: node1.example.com
+  tasks:
+  - name: uninstall httpd
+    yum: name=httpd state=absent
+  - name: remove index.html
+    file:
+      path: /var/www/html/index.html
+      state: absent
+  - name: close port 443 and enforce rule
+    firewalld:    
+      service: https
+      permanent: yes
+      state: disabled
+      immediate: yes
+  - name: close port 80 and enforce rule
+    firewalld:
+      service: http
+      permanent: yes
+      state: disabled
+      immediate: yes
