@@ -1,0 +1,26 @@
+---
+- name: Install httpd, enable it, open port 443 and 80, and create start page
+  hosts: node1.example.com
+  tasks:
+  - name: install httpd
+    yum: name=httpd state=latest
+  - name: enable httpd
+    service: name=httpd enabled=true state=started
+  - name: create index.html
+    copy:
+      content: "Welcome to my web server"
+      dest: /var/www/html/index.html
+      force: yes
+      mode: 0444
+  - name: open port 443 and enforce rule
+    firewalld:    
+      service: https
+      permanent: yes
+      state: enabled
+      immediate: yes
+  - name: open port 80 and enforce rule
+    firewalld:
+      service: http
+      permanent: yes
+      state: enabled
+      immediate: yes
