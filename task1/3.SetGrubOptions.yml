@@ -1,0 +1,15 @@
+---
+- name: Change /etc/default/grub by adding net.ifnames=0 and biosdevname=0 options to GRUB_CMDLINE_LINUX Line.
+  hosts: node1.example.com
+  tasks:
+  - name: add net.ifnames=0 and biosdevname=0 options to grub
+    lineinfile:
+      state: present
+      dest: /etc/default/grub
+      backrefs: yes
+      regexp: '^(GRUB_CMDLINE_LINUX=(?!.* net\.ifnames=0 biosdevname=0)\"[^\"]+)(\".*)'
+      line: '\1 net.ifnames=0 biosdevname=0\2'
+    register: GrubState
+  - name: Execute grub2-mkconfig to apply changes if grub file has been changed.
+    command: grub2-mkconfig -o /boot/grub2/grub.cfg
+    when: GrubState.changed
