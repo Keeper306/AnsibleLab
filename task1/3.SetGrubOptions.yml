@@ -1,6 +1,6 @@
 ---
 - name: Change /etc/default/grub by adding net.ifnames=0 and biosdevname=0 options to GRUB_CMDLINE_LINUX Line.
-  hosts: node1.example.com
+  hosts: all
   tasks:
   - name: add net.ifnames=0 and biosdevname=0 options to grub
     lineinfile:

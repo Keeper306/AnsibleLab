@@ -1,6 +1,6 @@
 ---
 - name: Install httpd, enable it, open port 443 and 80, and create start page
-  hosts: node1.example.com
+  hosts: webservers 
   tasks:
   - name: install httpd
     yum: name=httpd state=latest

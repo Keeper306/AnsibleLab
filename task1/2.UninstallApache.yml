@@ -1,6 +1,6 @@
 ---
 - name: Uninstall httpd, close port 443 and 80, and remove start page
-  hosts: node1.example.com
+  hosts: webservers
   tasks:
   - name: uninstall httpd
     yum: name=httpd state=absent
