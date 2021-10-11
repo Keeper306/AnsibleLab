@@ -1,0 +1,25 @@
+---
+- name: Create users that enlisted in vars/users.yml file
+  hosts: webservers 
+  vars_files:
+    - vars/users.yml
+    - secret.yml
+  tasks:
+  - name: Add User
+    user:
+      name: "{{ item.username }}"
+      comment: "{{ item.username }}@example.com"
+      home: "/home/{{ item.username }}"
+    loop: "{{ users }}"
+    notify:
+      - SetPassword
+    register: UserOutput
+#Handler to set password only for new accounts
+  handlers:
+    - name: SetPassword
+      user:
+        name: "{{ item.item.username }}"
+        password: "{{ defaultpassword | password_hash('sha512') }}"
+      when: item.changed == true 
+      loop: "{{ UserOutput.results }}"
+      
