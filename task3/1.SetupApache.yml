@@ -1,0 +1,5 @@
+---
+- name: Install httpd, enable it, open port 443 and 80, and create start page
+  hosts: webservers 
+  roles:
+    - role: httpdserver

@@ -1,0 +1,10 @@
+---
+  - name: install httpd
+    yum: name=httpd state=latest
+    when: ansible_facts['os_family'] == "RedHat"
+  - name: enable httpd
+    service: name=httpd enabled=true state=started
+    notify:
+      - create index.html
+      - open port 443 and enforce rule
+      - open port 80 and enforce rule

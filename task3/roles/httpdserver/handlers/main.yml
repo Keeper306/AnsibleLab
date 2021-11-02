@@ -1,0 +1,19 @@
+---
+  - name: create index.html
+    template:
+      src: index.j2
+      dest: /var/www/html/index.html
+      force: yes
+      mode: 0444
+  - name: open port 443 and enforce rule
+    firewalld:
+      service: https
+      permanent: yes
+      state: enabled
+      immediate: yes
+  - name: open port 80 and enforce rule
+    firewalld:
+      service: http
+      permanent: yes
+      state: enabled
+      immediate: yes
