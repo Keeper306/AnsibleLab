@@ -1,0 +1,5 @@
+---
+- name: Install ftp, enable it, open port 21.
+  hosts: node2.example.com 
+  roles:
+    - role: ftpserver

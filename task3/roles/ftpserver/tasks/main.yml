@@ -1,0 +1,42 @@
+---
+  - name: install vsftpd
+    yum: name=vsftpd state=latest
+    when: ansible_facts['os_family'] == "RedHat"
+  - name: enable vsftpd service
+    service: name=vsftpd enabled=true state=started
+  #- name: create pub directory
+   # file:
+    #  path: /var/ftp/pub
+     # mode: 0755
+      #recurse: yes
+  - name: create upload directory
+    file:
+      path: /var/ftp/pub/upload
+      mode: 0777
+      recurse: yes
+  - name: enable ftp firewall rule
+    firewalld:
+      service: ftp
+      permanent: yes
+      state: enabled
+      immediate: yes
+  - name: create vsftpd.conf
+    template:
+      src: vsftpd.j2
+      dest: /etc/vsftpd/vsftpd.conf
+      force: yes
+      mode: 0444
+    notify:
+    - restart vsftpd
+  - name: enable ftpd_anon_write
+    seboolean:
+      name: ftpd_anon_write
+      state: yes
+      persistent: yes
+  - name: set SELinux context
+    sefcontext:
+      target: /var/ftp/pub/upload
+      setype: public_content_rw_t
+      state: present
+    notify:
+      - run restorecon
